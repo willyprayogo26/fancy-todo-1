@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="google-signin-client_id" content="147025214331-kt0ft039k6u65g70b7ap04g24nggd52u.apps.googleusercontent.com">
+    <title>Fancy-Todo</title>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://apis.google.com/js/platform.js"></script>
+    <script src="./js/index.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm justify-content-between" style="background: #ffc100;">
+        <a class="navbar-brand text-white" href="#">Fancy Todo</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul id="navContent" class="navbar-nav mr-auto"></ul>
+            <div id="user"></div>
+            <a id="btn-regis" href="#" onclick="getRegisForm();" class="m-2 text-white">Register</a>
+            <a id="btn-login" href="#" onclick="getLoginForm();" class="m-2 text-white">Login</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="regisForm">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                    <h5 class="card-title text-center">Registration</h5>
+                    <form class="form-signin" onsubmit="toRegis()">
+                        <div class="form-label-group">
+                            <input type="text" id="regisFullname" class="form-control" placeholder="Fullname" required autofocus>
+                            <label for="regisFullname">Fullname</label>
+                        </div>
+        
+                        <div class="form-label-group">
+                            <input type="email" id="regisEmail" class="form-control" placeholder="Email address" required>
+                            <label for="regisEmail">Email address</label>
+                        </div>
+        
+                        <div class="form-label-group">
+                            <input type="password" id="regisPassword" class="form-control" placeholder="Password" required>
+                            <label for="regisPassword">Password</label>
+                        </div>
+        
+                        <button class="btn btn-lg btn-block text-uppercase text-white" type="submit" style="background: #ffc100;">Register</button>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="loginForm">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Sign In</h5>
+                        <form class="form-signin" onsubmit="toLogin()" method="POST">
+                            <div class="form-label-group">
+                                <input type="email" id="loginEmail" class="form-control" placeholder="Email address" required autofocus>
+                                <label for="loginEmail">Email address</label>
+                            </div>
+            
+                            <div class="form-label-group">
+                                <input type="password" id="loginPassword" class="form-control" placeholder="Password" required>
+                                <label for="loginPassword">Password</label>
+                            </div>
+            
+                            <button class="btn btn-lg btn-block text-uppercase text-white" type="submit" style="background: #ffc100;">Sign In</button>
+                            <hr class="my-4">
+                            <div class="d-flex justify-content-center">
+                                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="project-list">
+            <div class="row justify-content-between mt-3">
+                <h3 style="color: #ffc100;">My Projects</h3>
+                <button type="button" class="btn text-white" style="background: #ffc100;" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
+                <table class="table rounded mt-2 bg-light" style="border: 2px solid #ffc100;">
+                    <thead style="background: #ffc100;">
+                        <tr class="text-center">
+                        <th scope="col">No</th>
+                        <th scope="col">Project Name</th>
+                        <th scope="col">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allProject"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="project-details">
+            <div class="row justify-content-between mt-3">
+                <h3 style="color: #ffc100;">Project Todos</h3>
+                <div>
+                    <button type="button" class="btn text-white" style="background: #ffc100;" data-toggle="modal" data-target="#addMemberModal">Add Member</button>
+                    <button type="button" class="btn text-white" style="background: #ffc100;" data-toggle="modal" data-target="#addTodoModal">Add Todo</button>
+                </div>
+                <table class="table rounded mt-2 bg-light" style="border: 2px solid #ffc100;">
+                    <thead style="background: #ffc100">
+                        <tr class="text-center">
+                        <th scope="col">No</th>
+                        <th scope="col">Todo</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Due Date</th>
+                        <th scope="col">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allProjectTodo"></tbody>
+                </table>
+            </div>
+
+            <div class="row justify-content-between mt-3">
+                <h3 style="color: #ffc100;">Project Members</h3>
+                <table class="table rounded mt-2 bg-light" style="border: 2px solid #ffc100;">
+                    <thead style="background: #ffc100">
+                        <tr class="text-center">
+                        <th scope="col">No</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Options</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allProjectMember"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="todo-list">
+            <div class="row justify-content-between mt-3">
+                <h3 style="color: #ffc100;">My Todos</h3>
+                <button type="button" class="btn text-white" style="background: #ffc100;" data-toggle="modal" data-target="#addTodoModal">Add Todo</button>
+                <table class="table rounded mt-2 bg-light" style="border: 2px solid #ffc100;">
+                    <thead style="background: #ffc100;">
+                      <tr class="text-center">
+                        <th scope="col">No</th>
+                        <th scope="col">Todo</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Due Date</th>
+                        <th scope="col">Options</th>
+                      </tr>
+                    </thead>
+                    <tbody id="allTodo"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addProjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Project Form</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Project Name:</label>
+                            <input id="projectTitle" type="text" class="form-control" required autofocus>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="toAddProject()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateProjectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Project Form</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Project Name:</label>
+                            <input id="update-project-title" type="text" class="form-control" required autofocus>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="toUpdateProject()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Member Form</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="memberEmail" class="col-form-label">Member email:</label>
+                            <input id="memberEmail" type="email" class="form-control" required autofocus>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="toAddMember()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addTodoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Todo Form</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Todo:</label>
+                            <input id="todoTitle" type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Description:</label>
+                            <textarea id="todoDescription" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Due date:</label>
+                            <input id="todoDate" type="date" id="min" class="form-control" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="toAddTodo()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateTodoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Todo Form</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Todo:</label>
+                            <input id="update-todo-title" type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Description:</label>
+                            <textarea id="update-todo-description" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Due date:</label>
+                            <input id="update-todo-date" type="date" id="min" class="form-control" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="toUpdateTodo()">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
