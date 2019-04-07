@@ -48,3 +48,20 @@
 | /todos/:id                | POST   | Authenticated:<br />(token),<br />Authorized:<br />(check isUser) | name: String<br />description: String<br />due_date: String | Create a todo<br />success:<br />(201), example: {"name": String, "description": String, "status": String, "due_date": String, "userId": {ObjectId}, projectId: null}<br />errors:<br />(400), example: {"message": String}<br />(500), error |
 | /todos/:id/:todoId        | PUT    | Authenticated:<br />(token)<br />Authorized:<br />(check isUser) | email: String                                               | Update a todo with new info<br />success:<br />(200), example:{"name": String, "description": String, "status": String, "due_date": String, "userId": {ObjectId}, projectId: {ObjectId}}<br />errors:<br />(404), example: {message: 'Todo not found'}<br />(500), error |
 | /todos/:id/:todoId        | DELETE | Authenticated:<br />(token),<br />Authorized:<br />(check isUser) | none                                                        | Delete a todo<br />success:<br />(200), example: {message: 'Todo successfully deleted'}<br />errors:<br />(404), example: {message: 'Todo not found'}<br />(500), error |
+
+
+
+### Link Deploy
+
+Server:
+
+<http://18.216.22.106/>
+
+<http://fancy-todo-server.willyprayogo26.xyz/>
+
+
+
+Client:
+
+<http://willy-fancytodo.s3-website-ap-southeast-1.amazonaws.com>
+

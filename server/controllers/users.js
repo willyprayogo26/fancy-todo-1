@@ -1,7 +1,9 @@
 const { User } = require('../models')
 const { bcrypt, jwt } = require('../helpers')
 const { OAuth2Client } = require('google-auth-library')
-const CLIENT_ID = "147025214331-q1f0rn8qudb7bho1j9alesrhmbhd5bq3.apps.googleusercontent.com"
+const CLIENT_ID = "147025214331-lbtj7qeunmq388k2pr3oh3dp2niloj8a.apps.googleusercontent.com"
+// const CLIENT_ID = "147025214331-kt0ft039k6u65g70b7ap04g24nggd52u.apps.googleusercontent.com"
+// const CLIENT_ID = "147025214331-q1f0rn8qudb7bho1j9alesrhmbhd5bq3.apps.googleusercontent.com"
 const client = new OAuth2Client(CLIENT_ID)
 
 class userController {
