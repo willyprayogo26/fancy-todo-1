@@ -55,8 +55,6 @@
 
 Server:
 
-<http://18.216.22.106/>
-
 <http://fancy-todo-server.willyprayogo26.xyz/>
 
 
