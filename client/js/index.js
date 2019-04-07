@@ -1,5 +1,7 @@
-// const baseUrl = 'http://localhost:3000'
+// DEPLOY
 const baseUrl = 'http://fancy-todo-server.willyprayogo26.xyz'
+// LOCAL
+// const baseUrl = 'http://localhost:3000'
 let updateId = ''
 let projectId = ''
 
