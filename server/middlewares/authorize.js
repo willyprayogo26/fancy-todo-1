@@ -39,18 +39,17 @@ module.exports = {
                 _id: req.params.id
             })
             .then(project => {
-                Project.find({
-                    members: req.user.id
+                let isRegistered = project.members.some(function (member) {
+                    return member.equals(req.user.id)
                 })
-                .then(user => {
-                    if(user) {
-                        next()
-                    } else {
-                        res.status(401).json({
-                            message: 'Unauthorized'
-                        })
-                    }
-                })
+
+                if(isRegistered) {
+                    next()
+                } else {
+                    res.status(401).json({
+                        message: 'Unauthorized'
+                    }) 
+                }
             })
             .catch(err => {
                 res.status(403).json({

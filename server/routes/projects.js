@@ -1,9 +1,10 @@
 const router = require('express').Router()
 const { projectController } = require('../controllers')
-const { isAuthorizedProject } = require('../middlewares')
+const { isAuthorizedProject, isAuthorizedUser } = require('../middlewares')
 
 router.get('/', projectController.getAllProject)
-router.post('/', projectController.createProject)
+
+router.post('/:id', isAuthorizedUser, projectController.createProject)
 
 router.get('/:id', isAuthorizedProject, projectController.getProjectById)
 router.put('/:id', isAuthorizedProject, projectController.updateProject)

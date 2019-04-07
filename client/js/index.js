@@ -87,14 +87,25 @@ function getProject() {
             let projects = ''
             let index = 1
             data.forEach(e => {
-                projects += `
-                <tr>
-                <td class="text-center">${index++}</td>
-                <td class="text-center">${e.name}</td>
-                <td class="text-center">
-                <a href="#" onclick="getDetailsProject('${e._id}')">Details</a> | <a href="#" onclick="getProjectUpdate('${e._id}')">Update</a> | <a href="#" onclick="toDeleteProject('${e._id}')">Delete</a>
-                </td>
-                </tr>`
+                if(e.createdBy === localStorage.getItem('id')) {
+                    projects += `
+                    <tr>
+                    <td class="text-center">${index++}</td>
+                    <td class="text-center">${e.name}</td>
+                    <td class="text-center">
+                    <a href="#" onclick="getDetailsProject('${e._id}')">Details</a> | <a href="#" onclick="getProjectUpdate('${e._id}')">Update</a> | <a href="#" onclick="toDeleteProject('${e._id}')">Delete</a>
+                    </td>
+                    </tr>`
+                } else {
+                    projects += `
+                    <tr>
+                    <td class="text-center">${index++}</td>
+                    <td class="text-center">${e.name}</td>
+                    <td class="text-center">
+                    <a href="#" onclick="getDetailsProject('${e._id}')">Details</a>
+                    </td>
+                    </tr>`
+                }
             });
             
             $('#allProject').empty()
@@ -296,7 +307,7 @@ function toAddProject() {
     event.preventDefault()
     $.ajax({
         method: 'POST',
-        url: `${baseUrl}/projects`,
+        url: `${baseUrl}/projects/${localStorage.getItem('id')}`,
         data: {
             name: $("#projectTitle").val(),
             createdBy: localStorage.getItem('id'),
@@ -309,7 +320,7 @@ function toAddProject() {
 
             Swal.fire({
                 type: 'success',
-                title: 'Project has been added',
+                title: 'Project successfully added',
                 showConfirmButton: false,
                 timer: 1500
             })
@@ -343,7 +354,7 @@ function toUpdateProject() {
 
             Swal.fire({
                 type: 'success',
-                title: 'Project has been updated',
+                title: 'Project successfully updated',
                 showConfirmButton: false,
                 timer: 1500
             })
@@ -382,7 +393,7 @@ function toDeleteProject(id) {
                 .done(() => {
                     Swal.fire({
                         type: 'success',
-                        title: 'Todo has been deleted',
+                        title: 'Project successfully deleted',
                         showConfirmButton: false,
                         timer: 1500
                     })
@@ -410,26 +421,27 @@ function toAddMember() {
         headers: { token: localStorage.getItem('token') }
     })
         .done(user => {
-            $("#memberEmail").val('')
-
             if(user) {
                 $.ajax({
                     method: 'PATCH',
                     url: `${baseUrl}/projects/add-member/${projectId}`,
                     data: {
-                        id: user._id
+                        id: user._id,
+                        ownerEmail: localStorage.getItem('email'),
+                        targetEmail: $("#memberEmail").val()
                     },
                     headers: { token: localStorage.getItem('token') }
                 })
                 .done(user => {
                     Swal.fire({
                         type: 'success',
-                        title: 'Member has been added',
+                        title: 'Member successfully added',
                         showConfirmButton: false,
                         timer: 1500
                     })
                     $('#addMemberModal').modal('toggle')
                     getDetailsProject()
+                    getInfo()
                 })
                 .fail((err, textStatus) => {
                     Swal.fire({
@@ -441,6 +453,8 @@ function toAddMember() {
                     })
                 })
             }
+            
+            $("#memberEmail").val('')
         })
         .fail((err, textStatus) => {
             Swal.fire({
@@ -475,7 +489,7 @@ function toDeleteMember(userId) {
             .done(user => {
                 Swal.fire({
                     type: 'success',
-                    title: 'Member has been deleted',
+                    title: 'Member successfully deleted',
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -570,7 +584,7 @@ function getMember() {
             let index = 1
             if(data.members) {
                 data.members.forEach(e => {
-                    if(data.createdBy === localStorage.getItem('id')) {
+                    if(data.createdBy === localStorage.getItem('id') && data.createdBy !== e._id) {
                         members += `
                         <tr>
                         <td class="text-center">${index++}</td>
@@ -649,7 +663,7 @@ function toAddTodo() {
     
                 Swal.fire({
                     type: 'success',
-                    title: 'Todo has been added',
+                    title: 'Todo successfully added',
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -704,7 +718,7 @@ function toUpdateTodo() {
     
                 Swal.fire({
                     type: 'success',
-                    title: 'Todo has been updated',
+                    title: 'Todo successfully updated',
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -749,7 +763,7 @@ function toDeleteTodo(todoId) {
                 .done(() => {
                     Swal.fire({
                         type: 'success',
-                        title: 'Todo has been deleted',
+                        title: 'Todo successfully deleted',
                         showConfirmButton: false,
                         timer: 1500
                     })

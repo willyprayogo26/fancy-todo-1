@@ -1,4 +1,5 @@
 const { Project } = require('../models')
+const { nodemailer } = require('../helpers')
 
 class projectController {
     static getAllProject (req, res) {
@@ -108,6 +109,10 @@ class projectController {
                     })
                     .then(project => {
                         if(project) {
+                            nodemailer.Mailer({
+                                ownerEmail: req.body.ownerEmail,
+                                targetEmail: req.body.targetEmail
+                            })
                             res.status(200).json(project)
                         } else {
                             res.status(404).json({
