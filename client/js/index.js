@@ -1,4 +1,5 @@
-const baseUrl = 'http://localhost:3000'
+// const baseUrl = 'http://localhost:3000'
+const baseUrl = 'http://fancy-todo-server.willyprayogo26.xyz'
 let updateId = ''
 let projectId = ''
 
