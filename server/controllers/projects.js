@@ -34,20 +34,34 @@ class projectController {
     }
 
     static createProject (req, res) {
-        Project.create({
-            ...req.body
+        Project.findOne({
+            name: req.body.name
         })
         .then(project => {
-            res.status(201).json(project)
-        })
-        .catch(err => {
-            if(err.errors.name) {
-                res.status(400).json({
-                    message: err.errors.name.message
+            if(!project) {
+                Project.create({
+                    ...req.body
+                })
+                .then(project => {
+                    res.status(201).json(project)
+                })
+                .catch(err => {
+                    if(err.errors.name) {
+                        res.status(400).json({
+                            message: err.errors.name.message
+                        })
+                    } else {
+                        res.status(500).json(err)
+                    }
                 })
             } else {
-                res.status(500).json(err)
+                res.status(400).json({
+                    message: 'Project already registered'
+                })
             }
+        })
+        .catch(err => {
+
         })
     }
 
@@ -74,21 +88,39 @@ class projectController {
     }
 
     static addProjectMember (req, res) {
-        Project.findByIdAndUpdate({
+        Project.findOne({
             _id: req.params.id
-        }, {
-            $push: {
-                members: req.body.id
-            }
-        }, {
-            new: true
         })
         .then(project => {
-            if(project) {
-                res.status(200).json(project)
+            let isRegistered = project.members.some(function (member) {
+                return member.equals(req.body.id)
+            })
+            
+            if(!isRegistered) {
+                Project.findByIdAndUpdate({
+                        _id: req.params.id
+                    }, {
+                        $push: {
+                            members: req.body.id
+                        }
+                    }, {
+                        new: true
+                    })
+                    .then(project => {
+                        if(project) {
+                            res.status(200).json(project)
+                        } else {
+                            res.status(404).json({
+                                message: 'Project not found'
+                            })
+                        }
+                    })
+                    .catch(err => {
+                        res.status(500).json(err)
+                    })
             } else {
-                res.status(404).json({
-                    message: 'Project not found'
+                res.status(400).json({
+                    message: 'Member already registered'
                 })
             }
         })

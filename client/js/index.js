@@ -18,7 +18,7 @@ $(document).ready(function () {
         }
 
         let minDate = `${year}-${month}-${day}`
-        $('#min').attr('min', minDate)
+        $('#todoDate, #update-todo-date').attr('min', minDate)
     });
     if (!localStorage.getItem('token')) {
         $("#todo-list").hide()
