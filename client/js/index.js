@@ -859,33 +859,29 @@ function onSignIn(googleUser) {
                 localStorage.setItem('email', response.email)
 
                 getContent()
+                const profile = googleUser.getBasicProfile();
+
+                let html = `<div class="navbar-brand text-white" style="font-size: 1rem;">${profile.getName()}</div>
+                <img src="${profile.getImageUrl()}" alt="userImage" style="border-radius: 8px; width: 40px;">
+                <a href="#" onclick="signOut();" class="m-2 text-danger"><i class="fas fa-power-off"></i></a>`
+            
+                $('#user').empty()
+                $('#user').append(html)
+                $("#user").show()
             })
             .fail(err => {
                 console.log(err)
             })
     }
-    const profile = googleUser.getBasicProfile();
-
-    let html = `<div class="navbar-brand text-white" style="font-size: 1rem;">${profile.getName()}</div>
-    <img src="${profile.getImageUrl()}" alt="userImage" style="border-radius: 8px; width: 40px;">
-    <a href="#" onclick="signOut();" class="m-2 text-danger"><i class="fas fa-power-off"></i></a>`
-
-    $('#user').empty()
-    $('#user').append(html)
-    $("#user").show()
+    
 }
 
 function signOut() {
     var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut()
-    .then(function () {
+    auth2.signOut().then(function () {
         console.log('User signed out.');
         localStorage.clear()
-    }
-    .catch(err => {
-        console.log(err)
-    })
-    );
+    });
 
     $("#user").hide()
     $("#todo-list").hide()
